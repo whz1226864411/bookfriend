@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.creat.bookfriend.mapper.BookImgCustomMapper" >
+    <resultMap id="BaseResultMap" type="com.creat.bookfriend.po.BookImg" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="real_img" property="realImg" jdbcType="VARCHAR" />
+        <result column="book_info_id" property="bookInfoId" jdbcType="BIGINT" />
+        <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+        <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Base_Column_List" >
+        id, real_img, book_info_id, gmt_create, gmt_modified
+    </sql>
+    <select id="getBookImgsByBookInfoId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+        select
+        <include refid="Base_Column_List" />
+        from book_img
+        where book_info_id = #{bookInfoId,jdbcType=BIGINT}
+    </select>
+</mapper>

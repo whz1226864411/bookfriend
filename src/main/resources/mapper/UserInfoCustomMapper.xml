@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.creat.bookfriend.mapper.UserInfoCustomMapper" >
+    <resultMap id="CustomResultMap" type="com.creat.bookfriend.po.UserInfoCustom" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <result column="sex" property="sex" jdbcType="BIT" />
+        <result column="signature" property="signature" jdbcType="VARCHAR" />
+        <result column="favicon_url" property="faviconUrl" jdbcType="VARCHAR" />
+        <result column="attention_num" property="attentionNum" jdbcType="INTEGER" />
+        <result column="fans_num" property="fansNum" jdbcType="INTEGER" />
+        <result column="province_id" property="provinceId" jdbcType="BIGINT" />
+        <result column="city_id" property="cityId" jdbcType="BIGINT" />
+        <result column="district_id" property="districtId" jdbcType="BIGINT" />
+        <result column="province_name" property="provinceName" jdbcType="VARCHAR"/>
+        <result column="city_name" property="cityName" jdbcType="VARCHAR" />
+        <result column="district_name" property="districtName" jdbcType="VARCHAR" />
+    </resultMap>
+    <resultMap id="BaseResultMap" type="com.creat.bookfriend.po.UserInfo" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="user_name" property="userName" jdbcType="VARCHAR" />
+        <result column="sex" property="sex" jdbcType="BIT" />
+        <result column="signature" property="signature" jdbcType="VARCHAR" />
+        <result column="favicon_url" property="faviconUrl" jdbcType="VARCHAR" />
+        <result column="attention_num" property="attentionNum" jdbcType="INTEGER" />
+        <result column="fans_num" property="fansNum" jdbcType="INTEGER" />
+        <result column="province_id" property="provinceId" jdbcType="BIGINT" />
+        <result column="city_id" property="cityId" jdbcType="BIGINT" />
+        <result column="district_id" property="districtId" jdbcType="BIGINT" />
+        <result column="user_account_id" property="userAccountId" jdbcType="BIGINT" />
+        <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+        <result column="gmt_modified" property="gmtModified" jdbcType="TIMESTAMP" />
+    </resultMap>
+    <sql id="Custom_Column_List" >
+        id, user_name, sex, signature, favicon_url, attention_num, fans_num, user_info.province_id,
+        user_info.city_id, user_info.district_id, province_name, city_name, district_name
+    </sql>
+    <sql id="Base_Column_List" >
+        user_info.id, user_name, sex, signature, favicon_url, attention_num, fans_num, province_id,
+        city_id, district_id, user_account_id, user_info.gmt_create, user_info.gmt_modified
+    </sql>
+    <select id="selectFriendInfo" resultMap="BaseResultMap">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM user_info,user_attention
+        WHERE user_attention.src_user_infor_id=#{srcUserInfoId}
+        AND user_info.id = user_attention.att_user_info_id
+    </select>
+    <select id="selectUserInfoByUaId" parameterType="java.lang.Long" resultMap="CustomResultMap">
+        SELECT
+        <include refid="Custom_Column_List"/>
+        FROM user_info,city,province,district
+        WHERE user_info.user_account_id=#{userAccountId} AND user_info.city_id=city.city_id
+        AND user_info.province_id=province.province_id AND user_info.district_id=district.district_id
+    </select>
+</mapper>

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.creat.bookfriend.mapper.BookInfoDetailMapper" >
+    <resultMap id="BaseResultMap" type="com.creat.bookfriend.po.BookInfoDetail" >
+        <id column="id" property="id" jdbcType="BIGINT" />
+        <result column="book_name" property="bookName" jdbcType="VARCHAR" />
+        <result column="isbn" property="isbn" jdbcType="BIGINT" />
+        <result column="author" property="author" jdbcType="VARCHAR" />
+        <result column="book_brief_id" property="bookBriefId" jdbcType="BIGINT" />
+        <result column="place" property="place" jdbcType="VARCHAR" />
+        <result column="cover_img" property="coverImg" jdbcType="VARCHAR" />
+        <result column="category_id" property="categoryId" jdbcType="INTEGER" />
+        <result column="tag_id" property="tagId" jdbcType="INTEGER" />
+        <result column="state" property="state" jdbcType="TINYINT" />
+        <result column="user_info_id" property="userInfoId" jdbcType="BIGINT" />
+        <result column="gmt_create" property="gmtCreate" jdbcType="TIMESTAMP" />
+        <result column="brief_text" property="briefText" jdbcType="VARCHAR"/>
+        <result column="user_name" property="srcUserName" jdbcType="VARCHAR"/>
+        <collection property="bookImgs" column="id"
+                    select="com.creat.bookfriend.mapper.BookImgCustomMapper.getBookImgsByBookInfoId">
+        </collection>
+    </resultMap>
+    <sql id="Base_Column_List" >
+        book_info.id, book_name, isbn, author, book_brief_id, place, cover_img, category_id, tag_id,
+        state, user_info_id, book_info.gmt_create,user_info.user_name,book_brief.brief_text
+    </sql>
+    <select id="getBookInfoDetailById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List" />
+        from book_info,user_info,book_brief
+        where book_info.id = #{bookInfoId,jdbcType=BIGINT} AND book_brief.id = book_info.book_brief_id
+              AND user_info.id = book_info.user_info_id
+    </select>
+</mapper>

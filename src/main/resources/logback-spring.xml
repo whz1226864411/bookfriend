@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true">
+    <springProfile name="prd">
+        <property resource="logback-prd.properties"/>
+    </springProfile>
+
+    <springProfile name="dev">
+        <property resource="logback-dev.properties"/>
+    </springProfile>
+
+    <appender name="file-info" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>info</level>
+        </filter>
+        <Prudent>true</Prudent>
+        <rollingPolicy
+                class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>
+                ${logback.dir}/${logback.info.filename}-%d{yyyy-MM-dd}.log
+            </FileNamePattern>
+            <!-- keep ${logback.maxhistory} days worth of history -->
+            <MaxHistory>${logback.maxhistory}</MaxHistory>
+        </rollingPolicy>
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>
+                %d{yyyy-MM-dd HH:mm:ss} -%msg%n
+            </Pattern>
+        </layout>
+        <encoder>
+            <!--<pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p [%c{0}] %m%n</pattern>-->
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <logger name="org.springframework.web" level="DEBUG">
+        <appender-ref ref="file-info" />
+    </logger>
+    <logger name="${logback.controller.dir}" level="DEBUG">
+        <appender-ref ref="file-info" />
+    </logger>
+</configuration>
